@@ -3,14 +3,14 @@
 
     <data>
 
-        <import type="com.rakshith.manthra.sathya.pickcolorfromcamera.ViewUtils" />
+        <import type="com.rakshith.pickcolorfromcamera.ViewUtils" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.rakshith.manthra.sathya.pickcolorfromcamera.CameraSurfaceView
+        <com.rakshith.pickcolorfromcamera.CameraSurfaceView
             android:id="@+id/search_camera_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

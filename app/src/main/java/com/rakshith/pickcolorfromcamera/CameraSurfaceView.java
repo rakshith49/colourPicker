@@ -1,11 +1,8 @@
-package com.rakshith.manthra.sathya.pickcolorfromcamera;
+package com.rakshith.pickcolorfromcamera;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.ImageFormat;
 import android.hardware.Camera;
-import android.hardware.SensorManager;
-import android.hardware.camera2.CameraManager;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,7 +18,6 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     private Camera mCamera;
     private boolean isSurfaceReady;
     private boolean isCameraClicked;
-    private boolean isCameraPreview;
     private int[] mSelectedColor;
     private int POINTER_RADIUS = 5;
     private Camera.Size mPreviewSize;
@@ -43,11 +39,11 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
     }
+
     public void startCameraPreview() {
         isCameraClicked = true;
         if (isSurfaceReady) {
             try {
-                getHolder().addCallback(this);
                 safeCameraOpen(Camera.CameraInfo.CAMERA_FACING_BACK);
                 if (mCamera != null) {
                     Camera.Parameters parameters = mCamera.getParameters();
@@ -55,18 +51,12 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
                     if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
                         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
                     }
-                    Camera.Size previewSize = getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), getWidth(), getHeight());
-                    parameters.setPreviewSize(previewSize.width, previewSize.height);
-                    parameters.setPictureFormat(ImageFormat.JPEG);
-                    Camera.Size pictureSize = getOptimalPreviewSize(parameters.getSupportedPictureSizes(), getWidth(), getHeight());
-                    parameters.setPictureSize(pictureSize.width, pictureSize.height);
                     parameters.set("orientation", "portrait");
                     parameters.set("rotation", 90);
                     mCamera.setParameters(parameters);
                     mCamera.setDisplayOrientation(90);
                     mCamera.setPreviewDisplay(getHolder());
                     mCamera.startPreview();
-                    isCameraPreview = true;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -92,31 +82,24 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         {
             mCamera.stopPreview();
             mCamera.setPreviewCallback(null);
-            isCameraPreview = false;
         } catch (Exception e)
-
 
         {
         }
 
         // set preview size and make any resize, rotate or
         // reformatting changes here
-
         // start preview with new settings
         try
 
         {
-            mCamera.getParameters().setPictureSize(w, h);
-            mCamera.getParameters().setPictureFormat(format);
-            mCamera.setPreviewDisplay(surfaceHolder);
             mCamera.startPreview();
-            isCameraPreview = true;
-
             //pick color from camera
             mSelectedColor = new int[3];
             mCamera.setPreviewCallback(new Camera.PreviewCallback() {
                 @Override
                 public void onPreviewFrame(byte[] data, Camera camera) {
+                    //color updated continuously
                     colorcode = getColorCode(data, camera);
                 }
             });
@@ -144,7 +127,6 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     }
 
 
-
     private void safeCameraOpen(int id) {
         try {
             stopPreviewAndFreeCamera();
@@ -162,7 +144,6 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
             if (mCamera != null) {
                 mCamera.stopPreview();
                 mCamera.setPreviewCallback(null);
-                isCameraPreview = false;
                 isCameraClicked = false;
                 mCamera.setPreviewCallback(null);
                 mCamera.release();
@@ -170,36 +151,6 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
             }
         } catch (Exception e) {
         }
-    }
-
-    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
-        final double ASPECT_TOLERANCE = 0.1;
-        double targetRatio = (double) h / w;
-
-        if (sizes == null) return null;
-
-        Camera.Size optimalSize = null;
-        double minDiff = Double.MAX_VALUE;
-
-        for (Camera.Size size : sizes) {
-            double ratio = (double) size.width / size.height;
-            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE || size.width > 1920) continue;
-            if (Math.abs(size.height - h) < minDiff) {
-                optimalSize = size;
-                minDiff = Math.abs(size.height - h);
-            }
-        }
-
-        if (optimalSize == null) {
-            minDiff = Double.MAX_VALUE;
-            for (Camera.Size size : sizes) {
-                if (Math.abs(size.height - h) < minDiff) {
-                    optimalSize = size;
-                    minDiff = Math.abs(size.height - h);
-                }
-            }
-        }
-        return optimalSize;
     }
 
 
