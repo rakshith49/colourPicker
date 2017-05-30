@@ -50,8 +50,12 @@
           <option name="url" value="https://github.com/Saketme/Pdf-password-validator.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/rakshith49/colourPicker.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
-    <option name="cloneParentDir" value="$USER_HOME$/Documents/newpdf" />
+    <option name="cloneParentDir" value="$USER_HOME$/Desktop/PickColorFromCamera" />
   </component>
 </application>
