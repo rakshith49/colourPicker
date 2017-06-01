@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PickColorFromCamera</string>
+    <string name="permission_required_camera">Oops, Camera permission required</string>
+    <string name="permission_enable">Enable</string>
+</resources>
