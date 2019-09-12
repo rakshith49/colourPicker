@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PickColorFromCamera.iml" filepath="$PROJECT_DIR$/PickColorFromCamera.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/colourPicker.iml" filepath="$PROJECT_DIR$/colourPicker.iml" />
     </modules>
   </component>
 </project>

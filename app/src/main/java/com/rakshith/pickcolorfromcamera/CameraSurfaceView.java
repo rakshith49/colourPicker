@@ -14,7 +14,7 @@ import java.util.List;
  * Created by rakshith on 7/6/16.
  */
 public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
-    public int colorcode;
+    public int colorCode;
     private Camera mCamera;
     private boolean isSurfaceReady;
     private boolean isCameraClicked;
@@ -77,22 +77,17 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int w, int h) {
 
-        try
-
-        {
+        try {
             mCamera.stopPreview();
             mCamera.setPreviewCallback(null);
-        } catch (Exception e)
-
-        {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // set preview size and make any resize, rotate or
         // reformatting changes here
         // start preview with new settings
-        try
-
-        {
+        try {
             mCamera.startPreview();
             //pick color from camera
             mSelectedColor = new int[3];
@@ -100,7 +95,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
                 @Override
                 public void onPreviewFrame(byte[] data, Camera camera) {
                     //color updated continuously
-                    colorcode = getColorCode(data, camera);
+                    colorCode = getColorCode(data, camera);
                 }
             });
 
@@ -150,6 +145,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
                 mCamera = null;
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

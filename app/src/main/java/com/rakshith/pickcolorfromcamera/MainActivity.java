@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.rakshith.pickcolorfromcamera.databinding.ActivityMainBinding;
 
@@ -26,19 +27,27 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mBinding;
     public static final int GET_CAMERA = 102;
     private static final int SETTING_RESULT = 103;
+    int randomColor = -1;
+    private ColorUtil colorUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         checkPermissionOPenCamera();
-        mBinding.click.setOnClickListener(new View.OnClickListener() {
+        mBinding.selectColorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setColorCode(mBinding.searchCameraView.colorcode);
+                setColorCode(mBinding.searchCameraView.colorCode);
+
             }
 
         });
+
+        colorUtil = new ColorUtil();
+        colorUtil.addValuestoMap();
+        randomColor = colorUtil.getRandomColor();
+        mBinding.shownColor.setBackgroundColor(randomColor);
 
 
     }
@@ -114,10 +123,44 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setColorCode(int colorcode) {
-        if (colorcode != 0) {
-            String hexColor = "#" + Integer.toHexString(colorcode).substring(2);
-            mBinding.textView.setTextColor(Color.parseColor(hexColor));
+    private void setColorCode(int colorCode) {
+        if (colorCode != 0) {
+            String hexColor = "#" + Integer.toHexString(colorCode).substring(2);
+            mBinding.selectedColor.setBackgroundColor(colorCode);
+
+            int redValue = Color.red(Color.parseColor(hexColor));
+            int blueValue = Color.blue(Color.parseColor(hexColor));
+            int greenValue = Color.green(Color.parseColor(hexColor));
+
+            int redPer = (redValue * 100) / 255;
+            int bluePer = (blueValue * 100) / 255;
+            int greenPer = (greenValue * 100) / 255;
+
+
+            int shownColorRedVal = Color.red(randomColor);
+            int shownColorBlueVal = Color.blue(randomColor);
+
+            int shownColorGreenVal = Color.green(randomColor);
+
+            int shownRedPer = (shownColorRedVal * 100) / 255;
+            int shownBluePer = (shownColorBlueVal * 100) / 255;
+            int shownGreenPer = (shownColorGreenVal * 100) / 255;
+
+            int diffRed = Math.abs(shownRedPer - redPer);
+            int diffBlue = Math.abs(shownBluePer - bluePer);
+            int diffGreen = Math.abs(shownGreenPer - greenPer);
+
+
+            if (diffRed <= 15 && diffBlue <= 15 && diffGreen <= 15) {
+                Toast.makeText(this, "Yeah!!!, Colour is matched", Toast.LENGTH_LONG).show();
+                randomColor = colorUtil.getRandomColor();
+                mBinding.shownColor.setBackgroundColor(randomColor);
+
+            } else {
+                Toast.makeText(this, "Oh Ohhhh!!!, Try again", Toast.LENGTH_LONG).show();
+            }
+
+
         }
     }
 }
